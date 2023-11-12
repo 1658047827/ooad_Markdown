@@ -9,6 +9,7 @@ class Command:
         pass
 
     def __str__(self) -> str:
+        # for debugging
         return str(self.__dict__)
 
 
@@ -18,7 +19,7 @@ class LoadCommand(Command):
         self.file_path = file_path
 
     def execute(self):
-        pass
+        self.editor.load(self.file_path)
 
 
 class SaveCommand(Command):
@@ -34,7 +35,7 @@ class WsCommand(Command):
         self.editor = editor
 
     def execute(self):
-        pass
+        self.editor.ws()
 
 
 class SwitchCommand(Command):
@@ -73,3 +74,23 @@ class DeleteCommand(Command):
 
     def execute(self):
         pass
+
+
+class ListCommand(Command):
+    def __init__(self, editor):
+        self.editor = editor
+
+    def execute(self):
+        self.editor.list()
+
+
+class HistoryCommand(Command):
+    def __init__(self):
+        pass
+
+    def execute(self):
+        pass
+
+
+class StatsCommand(Command):
+    pass

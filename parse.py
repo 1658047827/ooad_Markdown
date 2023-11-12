@@ -19,7 +19,9 @@ class Parse:
             "redo": self.redo,
             "list": self.list,
             "list-tree": self.list_tree,
-            "dir-tree": self.dir_tree
+            "dir-tree": self.dir_tree,
+            "history": self.history,
+            "stats": self.stats,
         }
 
     def parse_input(self, input: str):
@@ -42,17 +44,13 @@ class Parse:
             raise RuntimeError("Invalid command format!")
 
     def save(self, input: str):
-        pattern = re.compile(r"^save$")
-        match = pattern.match(input)
-        if match:
+        if input == "save":
             return SaveCommand(self.editor)
         else:
             raise RuntimeError("Invalid command format!")
 
     def ws(self, input: str):
-        pattern = re.compile(r"^ws$")
-        match = pattern.match(input)
-        if match:
+        if input == "ws":
             return WsCommand(self.editor)
         else:
             raise RuntimeError("Invalid command format!")
@@ -117,41 +115,42 @@ class Parse:
             raise RuntimeError("Invalid command format!")
 
     def undo(self, input: str):
-        pattern = re.compile(r"^undo$")
-        match = pattern.match(input)
-        if match:
+        if input == "undo":
             pass
         else:
             raise RuntimeError("Invalid command format!")
 
     def redo(self, input: str):
-        pattern = re.compile(r"^redo$")
-        match = pattern.match(input)
-        if match:
+        if input == "redo":
             pass
         else:
             raise RuntimeError("Invalid command format!")
 
     def list(self, input: str):
-        pattern = re.compile(r"^list$")
-        match = pattern.match(input)
-        if match:
-            pass
+        if input == "list":
+            return ListCommand(self.editor)
         else:
             raise RuntimeError("Invalid command format!")
 
     def list_tree(self, input: str):
-        pattern = re.compile(r"^list-tree$")
-        match = pattern.match(input)
-        if match:
+        if input == "list-tree":
             pass
         else:
             raise RuntimeError("Invalid command format!")
-        
-    def dir_tree(self, input:str):
+
+    def dir_tree(self, input: str):
         pattern = re.compile(r"^dir-tree(\s+(?P<dir>.+))?$")
         match = pattern.match(input)
         if match:
             pass
         else:
             raise RuntimeError("Invalid command format!")
+
+    def history(self, input: str):
+        if input == "history":
+            pass
+        else:
+            raise RuntimeError("Invalid command format!")
+
+    def stats(self, input: str):
+        pass
