@@ -27,7 +27,7 @@ class SaveCommand(Command):
         self.editor = editor
 
     def execute(self):
-        pass
+        self.editor.save()
 
 
 class WsCommand(Command):
@@ -44,7 +44,7 @@ class SwitchCommand(Command):
         self.file_num = file_num
 
     def execute(self):
-        pass
+        self.editor.switch(self.file_num)
 
 
 class CloseCommand(Command):
@@ -53,7 +53,7 @@ class CloseCommand(Command):
         self.file_num = file_num
 
     def execute(self):
-        pass
+        self.editor.close(self.file_num)
 
 
 class InsertCommand(Command):
@@ -85,8 +85,9 @@ class ListCommand(Command):
 
 
 class HistoryCommand(Command):
-    def __init__(self):
-        pass
+    def __init__(self, logger, record_num):
+        self.logger = logger
+        self.record_num = record_num
 
     def execute(self):
         pass

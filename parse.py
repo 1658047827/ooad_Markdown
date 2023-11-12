@@ -3,8 +3,9 @@ from command import *
 
 
 class Parse:
-    def __init__(self, editor):
+    def __init__(self, editor, logger):
         self.editor = editor
+        self.logger = logger
         self.dispatcher = {
             "load": self.load,
             "save": self.save,
@@ -147,8 +148,12 @@ class Parse:
             raise RuntimeError("Invalid command format!")
 
     def history(self, input: str):
-        if input == "history":
-            pass
+        pattern = re.compile(r"^history(\s+(?P<record_num>\d+))?$")
+        match = pattern.match(input)
+        if match:
+            record_num = match.group("record_num")
+            record_num = int(record_num) if record_num else -1
+            return HistoryCommand(self.logger, record_num)
         else:
             raise RuntimeError("Invalid command format!")
 
