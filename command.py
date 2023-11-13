@@ -63,7 +63,7 @@ class InsertCommand(Command):
         self.content = content
 
     def execute(self):
-        pass
+        self.editor.insert(self.line_num, self.content)
 
 
 class DeleteCommand(Command):
@@ -73,7 +73,7 @@ class DeleteCommand(Command):
         self.content = content
 
     def execute(self):
-        pass
+        self.editor.delete(self.line_num, self.content)
 
 
 class ListCommand(Command):

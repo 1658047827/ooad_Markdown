@@ -16,7 +16,6 @@ def client():
             break
         try:
             command = parse.parse_input(user_input)
-            # print(command) # for debugging
             command.execute()
         except Exception as e:
             print(e)

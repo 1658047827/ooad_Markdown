@@ -13,28 +13,27 @@ class FileManager:
                 raise RuntimeError("The target file is already open.")
 
         if os.path.isfile(file_path):
-            f = open(file_path, "r+", encoding="utf-8")
+            file = open(file_path, "r", encoding="utf-8")
         else:
-            f = open(file_path, "a+", encoding="utf-8")
-
+            file = open(file_path, "a+", encoding="utf-8")
         self.files.append(
             {
                 "name": file_name,
                 "path": file_path,
-                "wrapper": f,
-                "buffer": f.readlines(),
+                "buffer": file.readlines(),
                 "modified": False,
             }
         )
+        file.close()
+
         self.cur_file_num = len(self.files)
         return self.files[-1]["buffer"]
 
     def save_file(self, file_num):
         self.check_file_num(file_num)
-        file = self.files[file_num]
-
-        # TODO
-
+        file = self.files[file_num - 1]
+        with open(file["path"], "w", encoding="utf-8") as f:
+            f.writelines(file["buffer"])
         file["modified"] = False
 
     def show_open_files(self):
@@ -64,7 +63,6 @@ class FileManager:
                     print("Please input a valid option, 'y' or 'n'.")
             if choice == "y":
                 self.save_file(file_num)
-        file["wrapper"].close()
         self.files.pop(file_num - 1)
 
         if file_num < self.cur_file_num:
@@ -83,10 +81,14 @@ class FileManager:
             return None
 
     def close_all_files(self):
-        for file_numn in range(len(self.files), 0, -1):
-            self.close_file(file_numn)
+        for file_num in range(len(self.files), 0, -1):
+            self.close_file(file_num)
         return None
 
     def check_file_num(self, file_num):
         if 1 > file_num or file_num > len(self.files):
             raise IndexError("File number does not exist.")
+
+    def mark_modified(self, file_num):
+        self.check_file_num(file_num)
+        self.files[file_num - 1]["modified"] = True
