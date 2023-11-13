@@ -85,7 +85,6 @@ class Editor:
             else:
                 node = Node(8, line.strip("\r\n"))
 
-            print(f"node: {node.level}, {node.content}")
             for n in reversed(node_list):
                 if n.level < node.level:
                     n.add_child(node)
@@ -94,15 +93,19 @@ class Editor:
 
         return root
 
-    def print_tree(self, node: Node, depth=0):
-        indent = "  " * depth
-        print(f"{indent}├── {node.content}")
-        for child in node.children:
-            self.print_tree(child, depth + 1)
+    def print_tree(self, node: Node, prefix):
+        for i in range(len(node.children)):
+            child = node.children[i]
+            if i == len(node.children) - 1:
+                print(f"{prefix}└── {child.content}")
+                self.print_tree(child, prefix + "    ")
+            else:
+                print(f"{prefix}├── {child.content}")
+                self.print_tree(child, prefix + "|   ")
 
     def list_tree(self):
         root = self.build_tree()
-        self.print_tree(root, depth=0)
+        self.print_tree(root, prefix="")
 
     def exit(self):
         self.current_md = self.file_manager.close_all_files()
