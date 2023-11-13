@@ -84,6 +84,14 @@ class ListCommand(Command):
         self.editor.list()
 
 
+class ListTreeCommand(Command):
+    def __init__(self, editor):
+        self.editor = editor
+
+    def execute(self):
+        self.editor.list_tree()
+
+
 class HistoryCommand(Command):
     def __init__(self, logger, record_num):
         self.logger = logger

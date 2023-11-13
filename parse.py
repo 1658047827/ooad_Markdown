@@ -135,7 +135,7 @@ class Parse:
 
     def list_tree(self, input: str):
         if input == "list-tree":
-            pass
+            return ListTreeCommand(self.editor)
         else:
             raise RuntimeError("Invalid command format!")
 

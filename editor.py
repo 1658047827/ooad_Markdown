@@ -1,5 +1,16 @@
 import re
+import json
 from file import FileManager
+
+
+class Node:
+    def __init__(self, level, content=None):
+        self.level = level
+        self.content = content
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)
 
 
 class Editor:
@@ -59,8 +70,39 @@ class Editor:
         for line in self.current_md:
             print(line.strip("\r\n"))
 
+    def build_tree(self):
+        root = Node(0, "root")
+        node_list = [root]
+
+        for line in self.current_md:
+            header_pattern = re.compile(r"^(?P<header>#+)\s+(?P<content>.+)\n$")
+            match = header_pattern.match(line)
+            if match:
+                header = match.group("header")
+                content = match.group("content")
+                level = len(header)
+                node = Node(level, content)
+            else:
+                node = Node(8, line.strip("\r\n"))
+
+            print(f"node: {node.level}, {node.content}")
+            for n in reversed(node_list):
+                if n.level < node.level:
+                    n.add_child(node)
+                    break
+            node_list.append(node)
+
+        return root
+
+    def print_tree(self, node: Node, depth=0):
+        indent = "  " * depth
+        print(f"{indent}├── {node.content}")
+        for child in node.children:
+            self.print_tree(child, depth + 1)
+
     def list_tree(self):
-        pass
+        root = self.build_tree()
+        self.print_tree(root, depth=0)
 
     def exit(self):
         self.current_md = self.file_manager.close_all_files()
