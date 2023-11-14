@@ -106,9 +106,27 @@ class Editor:
                 print(f"{prefix}├── {child.content}")
                 self.print_tree(child, prefix + "|   ")
 
+    def find_dir(self, node: Node, dir):
+        if node.level < 8 and node.content == dir:
+            return node
+        for child in node.children:
+            n = self.find_dir(child, dir)
+            if n is not None:
+                return n
+        return None
+
     def list_tree(self):
         root = self.build_tree()
         self.print_tree(root, prefix="")
+
+    def dir_tree(self, dir):
+        root = self.build_tree()
+        node = self.find_dir(root, dir)
+        if node is None:
+            raise RuntimeError("The specified dir is not found.")
+        else:
+            print(f"└── {node.content}")
+            self.print_tree(node, prefix="    ")
 
     def exit(self):
         self.current_md = self.file_manager.close_all_files()

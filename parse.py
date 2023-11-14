@@ -90,7 +90,7 @@ class Parse:
         match = pattern.match(input)
         if match:
             content = match.group("content")
-            return InsertCommand(self.editor, 1, content)
+            return AppendHeadCommand(self.editor, content)
         else:
             raise RuntimeError("Invalid command format!")
 
@@ -99,7 +99,7 @@ class Parse:
         match = pattern.match(input)
         if match:
             content = match.group("content")
-            return InsertCommand(self.editor, -1, content)
+            return AppendTailCommand(self.editor, content)
         else:
             raise RuntimeError("Invalid command format!")
 
@@ -143,7 +143,8 @@ class Parse:
         pattern = re.compile(r"^dir-tree(\s+(?P<dir>.+))?$")
         match = pattern.match(input)
         if match:
-            pass
+            dir = match.group("dir")
+            return DirTreeCommand(self.editor, dir)
         else:
             raise RuntimeError("Invalid command format!")
 
@@ -152,10 +153,16 @@ class Parse:
         match = pattern.match(input)
         if match:
             record_num = match.group("record_num")
-            record_num = int(record_num) if record_num else -1
+            record_num = int(record_num) if record_num else None
             return HistoryCommand(self.logger, record_num)
         else:
             raise RuntimeError("Invalid command format!")
 
     def stats(self, input: str):
-        pass
+        pattern = re.compile(r"^stats(\s+((?P<all>all)|(?P<current>current)))?$")
+        match = pattern.match(input)
+        if match:
+            all, current = match.groups
+            pass
+        else:
+            raise RuntimeError("Invalid command format!")
