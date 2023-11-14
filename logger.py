@@ -27,3 +27,16 @@ class Logger:
         timestamp = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
         log_entry = f"{timestamp} {command.__str__()}"
         self.logger.info(log_entry)
+
+    def history(self, record_num):
+        with open("history.log", "r", encoding="utf-8") as file:
+            lines = file.readlines()
+        count = 0
+        for i in reversed(range(len(lines))):
+            line = lines[i]
+            if line.startswith("session start at"):
+                continue
+            print(line.rstrip("\r\n"))
+            count += 1
+            if count == record_num:
+                break

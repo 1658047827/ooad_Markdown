@@ -169,7 +169,7 @@ class HistoryCommand(Command):
         self.record_num = record_num
 
     def execute(self):
-        pass
+        self.logger.history(self.record_num)
 
     def __str__(self) -> str:
         if self.record_num is None:
