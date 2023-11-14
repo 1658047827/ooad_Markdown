@@ -72,7 +72,6 @@ class Editor:
     def build_tree(self):
         root = Node(0, "root")
         node_list = [root]
-        last_level_node = {0: root}
 
         for line in self.current_md:
             header_pattern = re.compile(r"^(?P<header>#+)\s+(?P<content>.+)\n$")
@@ -84,15 +83,12 @@ class Editor:
             else:
                 node = Node(8, line.strip("\r\n"))
 
-            parent = None
-            parent_level = node.level - 1
-            while parent is None:
-                parent = last_level_node.get(parent_level, None)
-                parent_level -= 1
-            parent.add_child(node)
+            for n in reversed(node_list):
+                if n.level < node.level:
+                    n.add_child(node)
+                    break
 
             node_list.append(node)
-            last_level_node[node.level] = node
 
         return root
 
@@ -107,7 +103,7 @@ class Editor:
                 self.print_tree(child, prefix + "|   ")
 
     def find_dir(self, node: Node, dir):
-        if node.level < 8 and node.content == dir:
+        if node.level <= 8 and node.content == dir:
             return node
         for child in node.children:
             n = self.find_dir(child, dir)
