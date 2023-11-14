@@ -7,8 +7,8 @@ from invoker import Invoker
 def client():
     editor = Editor()
     logger = Logger()
-    parse = Parse(editor, logger)
     invoker = Invoker(logger)
+    parse = Parse(editor, logger, invoker)
     logger.start_session()
 
     print("Command Line Markdown Editing Tool")

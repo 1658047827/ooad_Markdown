@@ -2,10 +2,15 @@ class Command:
     def execute(self):
         pass
 
-    def undo(self):
-        pass
+    def undoable(self):
+        return False
 
-    def redo(self):
+
+class UndoableCommand(Command):
+    def undoable(self):
+        return True
+
+    def undo(self):
         pass
 
 
@@ -67,14 +72,18 @@ class CloseCommand(Command):
         return f"close {self.file_num}"
 
 
-class InsertCommand(Command):
+class InsertCommand(UndoableCommand):
     def __init__(self, editor, line_num, content):
         self.editor = editor
         self.line_num = line_num
         self.content = content
+        self.inserted_line = -1
 
     def execute(self):
-        self.editor.insert(self.line_num, self.content)
+        self.inserted_line = self.editor.insert(self.line_num, self.content)
+
+    def undo(self):
+        self.editor.delete(self.inserted_line, None)
 
     def __str__(self) -> str:
         if self.line_num == -1:
@@ -83,44 +92,77 @@ class InsertCommand(Command):
             return f"insert {self.line_num} {self.content}"
 
 
-class AppendHeadCommand(Command):
+class AppendHeadCommand(UndoableCommand):
     def __init__(self, editor, content):
         self.editor = editor
         self.content = content
+        self.inserted_line = -1
 
     def execute(self):
-        self.editor.insert(1, self.content)
+        self.inserted_line = self.editor.insert(1, self.content)
+
+    def undo(self):
+        self.editor.delete(self.inserted_line, None)
 
     def __str__(self) -> str:
         return f"append-head {self.content}"
 
 
-class AppendTailCommand(Command):
+class AppendTailCommand(UndoableCommand):
     def __init__(self, editor, content):
         self.editor = editor
         self.content = content
+        self.inserted_line = -1
 
     def execute(self):
-        self.editor.insert(-1, self.content)
+        self.inserted_line = self.editor.insert(-1, self.content)
+
+    def undo(self):
+        self.editor.delete(self.inserted_line, None)
 
     def __str__(self) -> str:
         return f"append-tail {self.content}"
 
 
-class DeleteCommand(Command):
+class DeleteCommand(UndoableCommand):
     def __init__(self, editor, line_num, content):
         self.editor = editor
         self.line_num = line_num
         self.content = content
+        self.deleted_lines = None
 
     def execute(self):
-        self.editor.delete(self.line_num, self.content)
+        self.deleted_lines = self.editor.delete(self.line_num, self.content)
+
+    def undo(self):
+        for (line_num, content) in self.deleted_lines:
+            self.editor.insert(line_num, content)
 
     def __str__(self) -> str:
         if self.line_num is not None:
             return f"delete {self.line_num}"
         else:
             return f"delete {self.content}"
+
+class UndoCommand(Command):
+    def __init__(self, invoker):
+        self.invoker = invoker
+
+    def execute(self):
+        self.invoker.undo()
+
+    def __str__(self) -> str:
+        return "undo"
+    
+class RedoCommand(Command):
+    def __init__(self, invoker):
+        self.invoker = invoker
+
+    def execute(self):
+        self.invoker.redo()
+
+    def __str__(self) -> str:
+        return "redo"
 
 
 class ListCommand(Command):
