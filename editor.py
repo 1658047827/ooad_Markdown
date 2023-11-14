@@ -113,7 +113,7 @@ class Editor:
                 self.print_tree(child, prefix + "    ")
             else:
                 print(f"{prefix}├── {child.content}")
-                self.print_tree(child, prefix + "|   ")
+                self.print_tree(child, prefix + "│   ")
 
     def find_dir(self, node: Node, dir):
         if node.level <= 8 and node.content == dir:
