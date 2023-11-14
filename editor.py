@@ -106,8 +106,12 @@ class Editor:
         return root
 
     def print_tree(self, node: Node, prefix):
+        pattern_str = r"^(\*|-|\+) "
+        pattern = re.compile(pattern_str)
         for i in range(len(node.children)):
             child = node.children[i]
+            if pattern.match(child.content):
+                child.content = "·" + child.content[1:]
             if i == len(node.children) - 1:
                 print(f"{prefix}└── {child.content}")
                 self.print_tree(child, prefix + "    ")
