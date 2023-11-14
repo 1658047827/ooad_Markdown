@@ -26,6 +26,7 @@ def client():
             if command is not None:
                 logger.record_command(command)
             continue
+    logger.clean()
 
 
 if __name__ == "__main__":

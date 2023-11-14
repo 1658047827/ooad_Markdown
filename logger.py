@@ -40,3 +40,8 @@ class Logger:
             count += 1
             if count == record_num:
                 break
+
+    def clean(self):
+        for handler in self.logger.handlers[:]:
+            self.logger.removeHandler(handler)
+        logging.shutdown()
