@@ -2,12 +2,20 @@ class Command:
     def execute(self):
         pass
 
-    def undoable(self):
+    def can_undo(self):
+        return False
+
+    def can_ignore(self):
         return False
 
 
-class UndoableCommand(Command):
-    def undoable(self):
+class CanIgnoreCommand(Command):
+    def can_ignore(self):
+        return True
+
+
+class CanUndoCommand(Command):
+    def can_undo(self):
         return True
 
     def undo(self):
@@ -72,7 +80,7 @@ class CloseCommand(Command):
         return f"close {self.file_num}"
 
 
-class InsertCommand(UndoableCommand):
+class InsertCommand(CanUndoCommand):
     def __init__(self, editor, line_num, content):
         self.editor = editor
         self.line_num = line_num
@@ -92,7 +100,7 @@ class InsertCommand(UndoableCommand):
             return f"insert {self.line_num} {self.content}"
 
 
-class AppendHeadCommand(UndoableCommand):
+class AppendHeadCommand(CanUndoCommand):
     def __init__(self, editor, content):
         self.editor = editor
         self.content = content
@@ -108,7 +116,7 @@ class AppendHeadCommand(UndoableCommand):
         return f"append-head {self.content}"
 
 
-class AppendTailCommand(UndoableCommand):
+class AppendTailCommand(CanUndoCommand):
     def __init__(self, editor, content):
         self.editor = editor
         self.content = content
@@ -124,7 +132,7 @@ class AppendTailCommand(UndoableCommand):
         return f"append-tail {self.content}"
 
 
-class DeleteCommand(UndoableCommand):
+class DeleteCommand(CanUndoCommand):
     def __init__(self, editor, line_num, content):
         self.editor = editor
         self.line_num = line_num
@@ -135,7 +143,7 @@ class DeleteCommand(UndoableCommand):
         self.deleted_lines = self.editor.delete(self.line_num, self.content)
 
     def undo(self):
-        for (line_num, content) in self.deleted_lines:
+        for line_num, content in self.deleted_lines:
             self.editor.insert(line_num, content)
 
     def __str__(self) -> str:
@@ -144,7 +152,8 @@ class DeleteCommand(UndoableCommand):
         else:
             return f"delete {self.content}"
 
-class UndoCommand(Command):
+
+class UndoCommand(CanIgnoreCommand):
     def __init__(self, invoker):
         self.invoker = invoker
 
@@ -153,8 +162,9 @@ class UndoCommand(Command):
 
     def __str__(self) -> str:
         return "undo"
-    
-class RedoCommand(Command):
+
+
+class RedoCommand(CanIgnoreCommand):
     def __init__(self, invoker):
         self.invoker = invoker
 
@@ -165,7 +175,7 @@ class RedoCommand(Command):
         return "redo"
 
 
-class ListCommand(Command):
+class ListCommand(CanIgnoreCommand):
     def __init__(self, editor):
         self.editor = editor
 
@@ -176,7 +186,7 @@ class ListCommand(Command):
         return "list"
 
 
-class ListTreeCommand(Command):
+class ListTreeCommand(CanIgnoreCommand):
     def __init__(self, editor):
         self.editor = editor
 
@@ -187,7 +197,7 @@ class ListTreeCommand(Command):
         return "list-tree"
 
 
-class DirTreeCommand(Command):
+class DirTreeCommand(CanIgnoreCommand):
     def __init__(self, editor, dir):
         self.editor = editor
         self.dir = dir
@@ -205,7 +215,7 @@ class DirTreeCommand(Command):
             return f"dir-tree {self.dir}"
 
 
-class HistoryCommand(Command):
+class HistoryCommand(CanIgnoreCommand):
     def __init__(self, logger, record_num):
         self.logger = logger
         self.record_num = record_num
@@ -220,7 +230,7 @@ class HistoryCommand(Command):
             return f"history {self.record_num}"
 
 
-class StatsCommand(Command):
+class StatsCommand(CanIgnoreCommand):
     def __init__(self, option):
         self.option = option
 

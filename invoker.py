@@ -1,3 +1,6 @@
+from command import *
+
+
 class Invoker:
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -7,8 +10,13 @@ class Invoker:
     def execute_command(self, command):
         command.execute()
         self.logger.record_command(command)
-        if command.undoable():
+        if command.can_undo():  # insert, delete
             self.undo_command = command
+            self.redo_command = None
+        elif command.can_ignore():  # list, list-tree
+            return
+        elif not command.can_ignore():  # save, load
+            self.undo_command = None
 
     def undo(self):
         if self.undo_command is None:
