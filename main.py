@@ -1,12 +1,15 @@
 from parse import Parse
 from editor import Editor
 from logger import Logger
+from invoker import Invoker
 
 
 def client():
     editor = Editor()
     logger = Logger()
     parse = Parse(editor, logger)
+    invoker = Invoker(logger)
+    logger.start_session()
 
     print("Command Line Markdown Editing Tool")
     while True:
@@ -15,10 +18,13 @@ def client():
             editor.exit()
             break
         try:
+            command = None
             command = parse.parse_input(user_input)
-            command.execute()
+            invoker.execute_command(command)
         except Exception as e:
             print(e)
+            if command is not None:
+                logger.record_command(command)
             continue
 
 

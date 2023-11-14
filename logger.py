@@ -1,2 +1,29 @@
+import logging
+import datetime
+
+
 class Logger:
-    pass
+    def __init__(self) -> None:
+        self.logger = self.setup_logger()
+
+    def setup_logger(self):
+        logger = logging.getLogger("CommandLineMarkdownEditingTool")
+        logger.setLevel(logging.INFO)
+
+        log_file_name = "history.log"
+        file_handler = logging.FileHandler(log_file_name, encoding="utf-8")
+        file_handler.setLevel(logging.INFO)
+
+        logger.addHandler(file_handler)
+
+        return logger
+
+    def start_session(self):
+        timestamp = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
+        log_entry = f"session start at {timestamp}"
+        self.logger.info(log_entry)
+
+    def record_command(self, command):
+        timestamp = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
+        log_entry = f"{timestamp} {command.__str__()}"
+        self.logger.info(log_entry)
