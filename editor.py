@@ -53,7 +53,7 @@ class Editor:
                 raise RuntimeError("Invalid line number when deleting.")
         elif content is not None:
             escaped_content = re.escape(content)
-            pattern_str = r"^((#+)|\*|-|\+|(\d+\.))\s+" + escaped_content + r"\n$"
+            pattern_str = r"^(((#+)|\*|-|\+|(\d+\.))\s+)?" + escaped_content + r"\n$"
             pattern = re.compile(pattern_str)
 
             for i in reversed(range(len(self.current_md))):
