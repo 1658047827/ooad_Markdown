@@ -125,10 +125,14 @@ class Editor:
         return None
 
     def list_tree(self):
+        if self.current_md is None:
+            raise RuntimeError("No currently open file.")
         root = self.build_tree()
         self.print_tree(root, prefix="")
 
     def dir_tree(self, dir):
+        if self.current_md is None:
+            raise RuntimeError("No currently open file.")
         root = self.build_tree()
         node = self.find_dir(root, dir)
         if node is None:
