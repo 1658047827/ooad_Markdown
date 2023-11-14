@@ -12,7 +12,8 @@ class FileManager:
             if file["name"] == file_name and os.path.samefile(file["path"], file_path):
                 raise RuntimeError("The target file is already open.")
 
-        if os.path.isfile(file_path):
+        isfile = os.path.isfile(file_path)
+        if isfile:
             file = open(file_path, "r", encoding="utf-8")
         else:
             file = open(file_path, "a+", encoding="utf-8")
@@ -21,7 +22,8 @@ class FileManager:
                 "name": file_name,
                 "path": file_path,
                 "buffer": file.readlines(),
-                "modified": False,
+                "modified": not isfile,
+                "new": not isfile,
             }
         )
         file.close()
@@ -35,6 +37,7 @@ class FileManager:
         with open(file["path"], "w", encoding="utf-8") as f:
             f.writelines(file["buffer"])
         file["modified"] = False
+        file["new"] = False
 
     def show_open_files(self):
         for i in range(len(self.files)):
@@ -63,6 +66,8 @@ class FileManager:
                     print("Please input a valid option, 'y' or 'n'.")
             if choice == "y":
                 self.save_file(file_num)
+            elif choice == "n" and file["new"]:
+                os.remove(file["path"])
         self.files.pop(file_num - 1)
 
         if file_num < self.cur_file_num:
