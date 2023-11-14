@@ -9,7 +9,6 @@ class Command:
         pass
 
     def __str__(self) -> str:
-        # for debugging
         return str(self.__dict__)
 
 

@@ -1,5 +1,4 @@
 import re
-import json
 from file import FileManager
 
 
@@ -73,23 +72,27 @@ class Editor:
     def build_tree(self):
         root = Node(0, "root")
         node_list = [root]
+        last_level_node = {0: root}
 
         for line in self.current_md:
             header_pattern = re.compile(r"^(?P<header>#+)\s+(?P<content>.+)\n$")
             match = header_pattern.match(line)
             if match:
-                header = match.group("header")
-                content = match.group("content")
+                header, content = match.groups()
                 level = len(header)
                 node = Node(level, content)
             else:
                 node = Node(8, line.strip("\r\n"))
 
-            for n in reversed(node_list):
-                if n.level < node.level:
-                    n.add_child(node)
-                    break
+            parent = None
+            parent_level = node.level - 1
+            while parent is None:
+                parent = last_level_node.get(parent_level, None)
+                parent_level -= 1
+            parent.add_child(node)
+
             node_list.append(node)
+            last_level_node[node.level] = node
 
         return root
 
