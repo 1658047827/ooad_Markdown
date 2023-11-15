@@ -1,10 +1,23 @@
 import os
+from datetime import datetime, timedelta
 
 
 class FileManager:
     def __init__(self):
         self.cur_file_num = 0
+        self.last_timestamp = None
         self.files = []
+        self.stats = None
+
+    def attach(self, stats):
+        self.stats = stats
+
+    def notify(self):
+        if self.cur_file_num <= 0:
+            raise RuntimeError("No currently open file.")
+        file_path = self.files[self.cur_file_num - 1]["path"]
+        self.stats.update(file_path, datetime.now() - self.last_timestamp)
+        self.last_timestamp = datetime.now()
 
     def load_file(self, file_path):
         file_name = os.path.basename(file_path)
@@ -28,6 +41,10 @@ class FileManager:
         )
         file.close()
 
+        if self.last_timestamp is not None:
+            self.notify()
+        else:
+            self.last_timestamp = datetime.now()
         self.cur_file_num = len(self.files)
         return self.files[-1]["buffer"]
 
@@ -49,12 +66,17 @@ class FileManager:
 
     def switch_file(self, file_num):
         self.check_file_num(file_num)
+        self.notify()
         self.cur_file_num = file_num
         return self.files[file_num - 1]["buffer"]
 
     def close_file(self, file_num):
         self.check_file_num(file_num)
         file = self.files[file_num - 1]
+
+        if file_num == self.cur_file_num:
+            self.notify()
+
         if file["modified"]:
             while True:
                 choice = input(
@@ -68,6 +90,7 @@ class FileManager:
                 self.save_file(file_num)
             elif choice == "n" and file["new"]:
                 os.remove(file["path"])
+        self.stats.flush(file["path"])
         self.files.pop(file_num - 1)
 
         if file_num < self.cur_file_num:

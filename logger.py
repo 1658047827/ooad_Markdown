@@ -7,7 +7,7 @@ class Logger:
         self.logger = self.setup_logger()
 
     def setup_logger(self):
-        logger = logging.getLogger("CommandLineMarkdownEditingTool")
+        logger = logging.getLogger("history")
         logger.setLevel(logging.INFO)
 
         log_file_name = "history.log"
@@ -44,4 +44,3 @@ class Logger:
     def clean(self):
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
-        logging.shutdown()

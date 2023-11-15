@@ -231,11 +231,18 @@ class HistoryCommand(CanIgnoreCommand):
 
 
 class StatsCommand(CanIgnoreCommand):
-    def __init__(self, option):
+    def __init__(self, editor, stats_module, option):
+        self.editor = editor
+        self.stats_module = stats_module
         self.option = option
 
     def execute(self):
-        pass
+        self.editor.file_manager.notify()
+        file_path = self.editor.get_cur_file_path()
+        if self.option == "all":
+            self.stats_module.display_stats("all", None)
+        else:
+            self.stats_module.display_stats("current", file_path)
 
     def __str__(self) -> str:
         if self.option is None:
