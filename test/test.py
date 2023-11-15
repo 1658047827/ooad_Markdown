@@ -281,6 +281,8 @@ class TestCase5(unittest.TestCase):
 def clean():
     if os.path.exists("history.log"):
         os.remove("history.log")
+    if os.path.exists("stats.log"):
+        os.remove("stats.log")
     current_directory = os.getcwd()
     for filename in os.listdir(current_directory):
         if filename.endswith(".md"):
