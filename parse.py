@@ -28,8 +28,12 @@ class Parse:
         }
 
     def parse_input(self, input: str):
+        if input is None or input == "":
+            raise RuntimeError("Empty input is not allowed.")
         command = None
         parts = input.split()
+        if len(parts) == 0:
+            raise RuntimeError("Empty input is not allowed.")
         handler = self.dispatcher.get(parts[0], None)
         if handler:
             command = handler(input)
