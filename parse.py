@@ -3,10 +3,11 @@ from command import *
 
 
 class Parse:
-    def __init__(self, editor, logger, invoker):
+    def __init__(self, editor, logger, invoker, stats_module):
         self.editor = editor
         self.logger = logger
         self.invoker = invoker
+        self.stats_module = stats_module
         self.dispatcher = {
             "load": self.load,
             "save": self.save,
@@ -163,7 +164,8 @@ class Parse:
         pattern = re.compile(r"^stats(\s+((?P<all>all)|(?P<current>current)))?$")
         match = pattern.match(input)
         if match:
-            all, current = match.groups
-            pass
+            all = match.group("all")
+            option = "all" if all is not None else "current"
+            return StatsCommand(self.editor, self.stats_module, option)
         else:
             raise RuntimeError("Invalid command format.")

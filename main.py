@@ -1,21 +1,26 @@
+import logging
 from parse import Parse
 from editor import Editor
 from logger import Logger
 from invoker import Invoker
+from stats import Stats
 
 
 def client():
-    editor = Editor()
+    stats = Stats()
     logger = Logger()
+    editor = Editor()
+    editor.file_manager.attach(stats)
     invoker = Invoker(logger)
-    parse = Parse(editor, logger, invoker)
-    logger.start_session()
+    parse = Parse(editor, logger, invoker, stats)
 
+    logger.start_session()
+    stats.start_session()
+    
     print("Command Line Markdown Editing Tool")
     while True:
         user_input = input("> ")
         if user_input.lower() == "exit":
-            editor.exit()
             break
         try:
             command = None
@@ -26,7 +31,11 @@ def client():
             if command is not None:
                 logger.record_command(command)
             continue
+    
+    editor.exit()
     logger.clean()
+    stats.clean()
+    logging.shutdown()
 
 
 if __name__ == "__main__":
