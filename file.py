@@ -102,6 +102,7 @@ class FileManager:
                 self.cur_file_num = 1
             else:
                 self.cur_file_num = 0
+                self.last_timestamp = None
 
         if self.cur_file_num >= 1:
             return self.files[self.cur_file_num - 1]["buffer"]
