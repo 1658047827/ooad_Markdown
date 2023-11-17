@@ -23,58 +23,64 @@ class CanUndoCommand(Command):
 
 
 class LoadCommand(Command):
-    def __init__(self, editor, file_path):
+    def __init__(self, editor, file_manager, file_path):
         self.editor = editor
+        self.file_manager = file_manager
         self.file_path = file_path
 
     def execute(self):
-        self.editor.load(self.file_path)
+        md = self.file_manager.load_file(self.file_path)
+        self.editor.set_md(md)
 
     def __str__(self) -> str:
         return f"load {self.file_path}"
 
 
 class SaveCommand(Command):
-    def __init__(self, editor):
-        self.editor = editor
+    def __init__(self, file_manager):
+        self.file_manager = file_manager
 
     def execute(self):
-        self.editor.save()
+        self.file_manager.save()
 
     def __str__(self) -> str:
         return "save"
 
 
 class WsCommand(Command):
-    def __init__(self, editor):
-        self.editor = editor
+    def __init__(self, file_manager):
+        self.file_manager = file_manager
 
     def execute(self):
-        self.editor.ws()
+        self.file_manager.show_open_files()
 
     def __str__(self) -> str:
         return "ws"
 
 
 class SwitchCommand(Command):
-    def __init__(self, editor, file_num):
+    def __init__(self, editor, file_manager, file_num):
         self.editor = editor
+        self.file_manager = file_manager
         self.file_num = file_num
 
     def execute(self):
-        self.editor.switch(self.file_num)
+        md = self.file_manager.switch_file(self.file_num)
+        self.editor.set_md(md)
 
     def __str__(self) -> str:
         return f"switch {self.file_num}"
 
 
 class CloseCommand(Command):
-    def __init__(self, editor, file_num):
+    def __init__(self, editor, file_manager, file_num):
         self.editor = editor
+        self.file_manager = file_manager
         self.file_num = file_num
 
     def execute(self):
-        self.editor.close(self.file_num)
+        md = self.file_manager.close_file(self.file_num)
+        self.editor.set_md(md)
 
     def __str__(self) -> str:
         return f"close {self.file_num}"
@@ -238,10 +244,10 @@ class StatsCommand(CanIgnoreCommand):
 
     def execute(self):
         self.file_manager.notify()
-        file_path = self.file_manager.get_cur_file_path()
         if self.option == "all":
             self.stats_module.display_stats("all", None)
         else:
+            file_path = self.file_manager.get_cur_file_path()
             self.stats_module.display_stats("current", file_path)
 
     def __str__(self) -> str:

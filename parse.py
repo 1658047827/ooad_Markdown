@@ -47,19 +47,19 @@ class Parse:
         match = pattern.match(input)
         if match:
             file_path = match.group("file_path")
-            return LoadCommand(self.editor, file_path)
+            return LoadCommand(self.editor, self.file_manager, file_path)
         else:
             raise RuntimeError("Invalid command format.")
 
     def save(self, input: str):
         if input == "save":
-            return SaveCommand(self.editor)
+            return SaveCommand(self.file_manager)
         else:
             raise RuntimeError("Invalid command format.")
 
     def ws(self, input: str):
         if input == "ws":
-            return WsCommand(self.editor)
+            return WsCommand(self.file_manager)
         else:
             raise RuntimeError("Invalid command format.")
 
@@ -68,7 +68,7 @@ class Parse:
         match = pattern.match(input)
         if match:
             file_num = int(match.group("file_num"))
-            return SwitchCommand(self.editor, file_num)
+            return SwitchCommand(self.editor, self.file_manager, file_num)
         else:
             raise RuntimeError("Invalid command format.")
 
@@ -77,7 +77,7 @@ class Parse:
         match = pattern.match(input)
         if match:
             file_num = int(match.group("file_num"))
-            return CloseCommand(self.editor, file_num)
+            return CloseCommand(self.editor, self.file_manager, file_num)
         else:
             raise RuntimeError("Invalid command format.")
 

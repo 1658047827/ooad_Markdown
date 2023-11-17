@@ -48,6 +48,11 @@ class FileManager:
         self.cur_file_num = len(self.files)
         return self.files[-1]["buffer"]
 
+    def save(self):
+        if self.cur_file_num <= 0:
+            raise RuntimeError("No currently open file.")
+        self.save_file(self.cur_file_num)
+
     def save_file(self, file_num):
         self.check_file_num(file_num)
         file = self.files[file_num - 1]
