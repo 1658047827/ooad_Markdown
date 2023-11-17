@@ -47,7 +47,7 @@ class SaveCommand(Command):
         return "save"
 
 
-class WsCommand(Command):
+class WsCommand(CanIgnoreCommand):
     def __init__(self, file_manager):
         self.file_manager = file_manager
 

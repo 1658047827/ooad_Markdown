@@ -13,7 +13,7 @@ class Node:
 
 
 class Editor:
-    def __init__(self, file_manager):
+    def __init__(self, file_manager: FileManager):
         self.file_manager = file_manager
         self.current_md: list[str] = None
 

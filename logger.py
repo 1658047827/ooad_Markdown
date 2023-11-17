@@ -25,7 +25,7 @@ class Logger:
 
     def record_command(self, command):
         timestamp = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
-        log_entry = f"{timestamp} {command.__str__()}"
+        log_entry = f"{timestamp} {command}"
         self.logger.info(log_entry)
 
     def history(self, record_num):
