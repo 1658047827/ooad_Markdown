@@ -43,4 +43,5 @@ class Logger:
 
     def clean(self):
         for handler in self.logger.handlers[:]:
+            handler.close()
             self.logger.removeHandler(handler)
