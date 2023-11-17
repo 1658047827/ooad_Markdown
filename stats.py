@@ -10,21 +10,19 @@ class Observer:
 
 class Stats(Observer):
     def __init__(self):
+        self.logger = None
         self.session_start_timestamp = None
-        self.logger = self.setup_logger()
         self.stats_data = defaultdict(timedelta)
 
     def setup_logger(self):
         logger = logging.getLogger("stats")
         logger.setLevel(logging.INFO)
 
-        log_file_name = "stats.log"
-        file_handler = logging.FileHandler(log_file_name, encoding="utf-8")
+        file_handler = logging.FileHandler("stats.log", encoding="utf-8")
         file_handler.setLevel(logging.INFO)
 
         logger.addHandler(file_handler)
-
-        return logger
+        self.logger = logger
 
     def start_session(self):
         timestamp = datetime.now().strftime("%Y%m%d %H:%M:%S")
@@ -66,5 +64,9 @@ class Stats(Observer):
 
     def clean(self):
         for handler in self.logger.handlers[:]:
+            handler.flush()
             handler.close()
             self.logger.removeHandler(handler)
+
+
+stats_instance = Stats()

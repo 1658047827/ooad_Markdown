@@ -2,10 +2,13 @@ from command import *
 
 
 class Invoker:
-    def __init__(self, logger) -> None:
-        self.logger = logger
+    def __init__(self) -> None:
+        self.logger = None
         self.undo_command = None
         self.redo_command = None
+
+    def set_logger(self, logger):
+        self.logger = logger
 
     def execute_command(self, command):
         command.execute()
@@ -33,3 +36,6 @@ class Invoker:
         command.execute()
         self.redo_command = None
         self.undo_command = command
+
+
+invoker_instance = Invoker()

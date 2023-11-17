@@ -131,3 +131,6 @@ class FileManager:
         if self.cur_file_num <= 0:
             raise RuntimeError("No currently open file.")
         return self.files[self.cur_file_num - 1]["path"]
+
+
+file_manager_instance = FileManager()

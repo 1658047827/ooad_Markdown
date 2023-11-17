@@ -13,9 +13,12 @@ class Node:
 
 
 class Editor:
-    def __init__(self, file_manager: FileManager):
-        self.file_manager = file_manager
+    def __init__(self):
+        self.file_manager = None
         self.current_md: list[str] = None
+
+    def set_file_manager(self, file_manager: FileManager):
+        self.file_manager = file_manager
 
     def set_md(self, md):
         self.current_md = md
@@ -136,3 +139,6 @@ class Editor:
 
     def exit(self):
         self.current_md = self.file_manager.close_all_files()
+
+
+editor_instance = Editor()

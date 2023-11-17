@@ -4,19 +4,17 @@ import datetime
 
 class Logger:
     def __init__(self) -> None:
-        self.logger = self.setup_logger()
+        self.logger = None
 
     def setup_logger(self):
         logger = logging.getLogger("history")
         logger.setLevel(logging.INFO)
 
-        log_file_name = "history.log"
-        file_handler = logging.FileHandler(log_file_name, encoding="utf-8")
+        file_handler = logging.FileHandler("history.log", encoding="utf-8")
         file_handler.setLevel(logging.INFO)
 
         logger.addHandler(file_handler)
-
-        return logger
+        self.logger = logger
 
     def start_session(self):
         timestamp = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
@@ -43,5 +41,9 @@ class Logger:
 
     def clean(self):
         for handler in self.logger.handlers[:]:
+            handler.flush()
             handler.close()
             self.logger.removeHandler(handler)
+
+
+logger_instance = Logger()
