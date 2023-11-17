@@ -3,11 +3,12 @@ from command import *
 
 
 class Parse:
-    def __init__(self, editor, logger, invoker, stats_module):
+    def __init__(self, editor, logger, invoker, stats_module, file_manager):
         self.editor = editor
         self.logger = logger
         self.invoker = invoker
         self.stats_module = stats_module
+        self.file_manager = file_manager
         self.dispatcher = {
             "load": self.load,
             "save": self.save,
@@ -170,6 +171,6 @@ class Parse:
         if match:
             all = match.group("all")
             option = "all" if all is not None else "current"
-            return StatsCommand(self.editor, self.stats_module, option)
+            return StatsCommand(self.file_manager, self.stats_module, option)
         else:
             raise RuntimeError("Invalid command format.")

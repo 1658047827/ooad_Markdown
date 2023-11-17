@@ -13,8 +13,8 @@ class Node:
 
 
 class Editor:
-    def __init__(self):
-        self.file_manager = FileManager()
+    def __init__(self, file_manager):
+        self.file_manager = file_manager
         self.current_md: list[str] = None
 
     def load(self, file_path):
@@ -144,13 +144,6 @@ class Editor:
         else:
             print(f"└── {node.content}")
             self.print_tree(node, prefix="    ")
-
-    def get_cur_file_path(self):
-        if self.current_md is None:
-            raise RuntimeError("No currently open file.")
-        file_num = self.file_manager.cur_file_num
-        files = self.file_manager.files
-        return files[file_num - 1]["path"]
 
     def exit(self):
         self.current_md = self.file_manager.close_all_files()

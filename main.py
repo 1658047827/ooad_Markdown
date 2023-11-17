@@ -4,15 +4,17 @@ from editor import Editor
 from logger import Logger
 from invoker import Invoker
 from stats import Stats
+from file import FileManager
 
 
 def client():
     stats = Stats()
     logger = Logger()
-    editor = Editor()
-    editor.file_manager.attach(stats)
+    file_manager = FileManager()
+    file_manager.attach(stats)
+    editor = Editor(file_manager)
     invoker = Invoker(logger)
-    parse = Parse(editor, logger, invoker, stats)
+    parse = Parse(editor, logger, invoker, stats, file_manager)
 
     logger.start_session()
     stats.start_session()

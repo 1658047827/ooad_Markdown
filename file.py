@@ -121,3 +121,8 @@ class FileManager:
     def mark_modified(self, file_num):
         self.check_file_num(file_num)
         self.files[file_num - 1]["modified"] = True
+
+    def get_cur_file_path(self):
+        if self.cur_file_num <= 0:
+            raise RuntimeError("No currently open file.")
+        return self.files[self.cur_file_num - 1]["path"]
