@@ -1,16 +1,16 @@
-from command import *
+from command import Command
 
 
 class Invoker:
     def __init__(self) -> None:
         self.logger = None
-        self.undo_command = None
-        self.redo_command = None
+        self.undo_command: Command = None
+        self.redo_command: Command = None
 
     def set_logger(self, logger):
         self.logger = logger
 
-    def execute_command(self, command):
+    def execute_command(self, command: Command):
         command.execute()
         self.logger.record_command(command)
         if command.can_undo():  # insert, delete
