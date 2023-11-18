@@ -1,5 +1,9 @@
 # Command Line Markdown Editing Tool
 
+## 项目说明
+
+2023年秋复旦大学《面向对象设计与分析》课程项目。
+
 ## 运行环境
 
 使用 Python 3.9 环境运行，没有使用第三方库，只使用了 Python 标准库中的一些模块。
