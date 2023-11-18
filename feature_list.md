@@ -30,7 +30,7 @@
 
 ![image-20231117194304786](resource/4.png)
 
-## insert [⾏号] 标题/文本
+## insert [行号] 标题/文本
 
 完成状态：完成
 
@@ -48,7 +48,7 @@
 
 ![image-20231117194304786](resource/7.png)
 
-## delete 标题/文本 或 delete ⾏号
+## delete 标题/文本 或 delete 行号
 
 完成状态：完成
 
