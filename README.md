@@ -24,6 +24,10 @@
 
 ## 设计模式
 
+### 依赖注入
+
+在 `main.py` 中，获取各个类的单例，然后手工注入（方法注入、构造函数注入），也就是调用 `attach`、`set_file_manager`、`set_logger` 等方法，以及在 `Parse` 的构造函数中传入相关对象。
+
 ### 命令模式
 
 定义了 `Command` 基类，`Command` 是不能忽略，无法撤销重做的命令。同时有 `CanIgnoreCommand` 和 `CanUndoCommand` 类继承自 `Command` ，表示可被忽略的命令和可被撤销与重做的命令，其中仅有 `CanUndoCommand` 类需要实现 `undo` 方法。
