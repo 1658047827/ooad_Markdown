@@ -88,10 +88,8 @@ class Editor:
             else:
                 node = Node(8, line.strip("\r\n"))
 
-            idx = len(node_list) - 1
-            while idx >= 0 and node_list[idx].level >= node.level:
-                node_list.pop(idx)
-                idx -= 1
+            while len(node_list) > 0 and node_list[-1].level >= node.level:
+                node_list.pop()
             if len(node_list) > 0:
                 node_list[-1].add_child(node)
 
